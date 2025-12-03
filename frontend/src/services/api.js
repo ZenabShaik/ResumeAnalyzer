@@ -20,7 +20,7 @@ export const uploadResume = async (file) => {
   const formData = new FormData();
   formData.append('resume', file); // must match Multer field name
 
-  const res = await api.post('/resumes/upload', formData, {
+  const res = await api.post('/api/resumes/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 
