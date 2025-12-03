@@ -2,13 +2,9 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
-// Helper to normalize backend responses:
-// either { resume: {...} } or just {...}
+// Helper to normalize backend responses
 const normalizeResume = (payload) => {
   if (!payload) return null;
   if (payload.resume) return payload.resume;
@@ -16,26 +12,28 @@ const normalizeResume = (payload) => {
   return payload;
 };
 
+// ✅ UPLOAD
 export const uploadResume = async (file) => {
   const formData = new FormData();
-  formData.append('resume', file); // must match Multer field name
+  formData.append('resume', file); // must match upload.single("resume")
 
-  const res = await api.post('/api/resumes/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
-
+  const res = await api.post('/api/resumes/upload', formData);
   return normalizeResume(res.data);
 };
 
+// ✅ HISTORY LIST — FIXED
 export const getAllResumes = async () => {
-  const res = await api.get('/resumes');
+  const res = await api.get('/api/resumes');
   const data = res.data;
   if (Array.isArray(data)) return data;
   if (Array.isArray(data.resumes)) return data.resumes;
   return [];
 };
 
+// ✅ HISTORY DETAILS — FIXED
 export const getResumeById = async (id) => {
-  const res = await api.get(`/resumes/${id}`);
+  const res = await api.get(`/api/resumes/${id}`);
   return normalizeResume(res.data);
 };
+
+export default api;

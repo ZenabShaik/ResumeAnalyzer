@@ -1,6 +1,7 @@
 const Resume = require("../models/Resume");
 const { extractAndAnalyze } = require("../services/analysisService");
 
+// ✅ UPLOAD — already working, just hardened
 exports.uploadResume = async (req, res) => {
   try {
     if (!req.file) {
@@ -11,23 +12,46 @@ exports.uploadResume = async (req, res) => {
 
     const savedResume = await Resume.create({
       file_name: req.file.originalname,
-      ...analysis
+      ...analysis,
     });
 
-    res.status(201).json(savedResume);
+    return res.status(201).json(savedResume);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Resume processing failed" });
+    console.error("UPLOAD ERROR:", error);
+    return res.status(500).json({ message: "Resume processing failed" });
   }
 };
 
+// ✅ FIXED: GET ALL RESUMES — THIS IS THE HISTORY BUG FIX
 exports.getAllResumes = async (req, res) => {
-  const resumes = await Resume.find().sort({ uploaded_at: -1 });
-  res.json(resumes);
+  try {
+    const resumes = await Resume.find().sort({ uploaded_at: -1 });
+
+    // ✅ Always return an ARRAY (never undefined / null)
+    return res.status(200).json(resumes || []);
+  } catch (error) {
+    console.error("GET ALL RESUMES ERROR:", error);
+    return res.status(500).json({
+      message: "Failed to fetch resume history",
+      resumes: [], // ✅ frontend-safe fallback
+    });
+  }
 };
 
+// ✅ FIXED: GET RESUME BY ID — hardened
 exports.getResumeById = async (req, res) => {
-  const resume = await Resume.findById(req.params.id);
-  if (!resume) return res.status(404).json({ message: "Resume not found" });
-  res.json(resume);
+  try {
+    const resume = await Resume.findById(req.params.id);
+
+    if (!resume) {
+      return res.status(404).json({ message: "Resume not found" });
+    }
+
+    return res.status(200).json(resume);
+  } catch (error) {
+    console.error("GET RESUME BY ID ERROR:", error);
+    return res.status(500).json({
+      message: "Failed to fetch resume",
+    });
+  }
 };
