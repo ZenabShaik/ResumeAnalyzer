@@ -5,8 +5,12 @@ import PastResumesTable from './components/PastResumesTable';
 function App() {
   const [activeTab, setActiveTab] = useState('analysis');
 
+  // ✅ Analysis is now stored here (PERSISTENT)
+  const [analysis, setAnalysis] = useState(null);
+
   return (
     <div className="w-full max-w-6xl bg-slate-900/70 border border-slate-700/70 shadow-[0_24px_80px_rgba(0,0,0,0.65)] rounded-3xl p-5 md:p-8 backdrop-blur-xl">
+      
       {/* Header */}
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
@@ -62,9 +66,14 @@ function App() {
         </div>
       </div>
 
-      {/* Tab content */}
+      {/* ✅ Tab content (analysis is now persistent) */}
       <div className="mt-4">
-        {activeTab === 'analysis' && <ResumeUploader />}
+        {activeTab === 'analysis' && (
+          <ResumeUploader
+            analysis={analysis}
+            setAnalysis={setAnalysis}
+          />
+        )}
         {activeTab === 'history' && <PastResumesTable />}
       </div>
     </div>
