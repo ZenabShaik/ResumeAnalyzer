@@ -1,4 +1,4 @@
-Author: Zenab Shaik
+Author: Noora Shaik
 # 🚀 Resume Analyzer – AI-Powered Resume Intelligence Platform
 
 A full-stack, production-ready **AI-driven Resume Analyzer** that extracts structured data from resumes (PDF), performs recruiter-grade analysis using **Google Gemini**, stores historical insights in **MongoDB**, and displays everything in a clean, interactive **React UI**.
