@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { getAllResumes, getResumeById } from '../services/api';
 import ResumeDetails from './ResumeDetails';
 
@@ -165,13 +166,13 @@ function PastResumesTable() {
       </div>
 
       {/* Modal for details */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-800 bg-slate-950/95 shadow-[0_32px_120px_rgba(0,0,0,0.9)] p-4 md:p-6">
+      {modalOpen && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-800 bg-slate-950/95 shadow-[0_32px_120px_rgba(0,0,0,0.9)] p-4 md:p-6 text-slate-100">
             <button
               type="button"
               onClick={closeModal}
-              className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 border border-slate-700 text-slate-300 hover:bg-slate-800"
+              className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 border border-slate-700 text-slate-300 hover:bg-slate-800 cursor-pointer"
             >
               ✕
             </button>
@@ -193,7 +194,8 @@ function PastResumesTable() {
               </p>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
